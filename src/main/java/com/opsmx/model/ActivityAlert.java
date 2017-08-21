@@ -30,8 +30,8 @@ public class ActivityAlert implements Serializable{
 	private String metric;
 	@JsonProperty("value")
 	private double value;
-	@JsonProperty("providerUID")
-	private String providerUID;
+	@JsonProperty("entityUserUID")
+	private String entityUserUID;
 	@JsonProperty("host")
 	private String host;
 	@JsonProperty("timestamp")
@@ -55,7 +55,7 @@ public class ActivityAlert implements Serializable{
 		this.activity = activity;
 		this.metric = metric;
 		this.value = value;
-		this.providerUID = entityUserUID;
+		this.entityUserUID = entityUserUID;
 		this.host = host;
 		this.timestamp = timestamp;
 	}
@@ -100,14 +100,14 @@ public class ActivityAlert implements Serializable{
 		this.value = value;
 	}
 
-	@JsonProperty("providerUID")
-	public String getProviderUID() {
-		return providerUID;
+	@JsonProperty("entityUserUID")
+	public String getEntityUserUID() {
+		return entityUserUID;
 	}
 
-	@JsonProperty("providerUID")
-	public void setProviderUID(String entityUserUID) {
-		this.providerUID = entityUserUID;
+	@JsonProperty("entityUserUID")
+	public void setEntityUserUID(String entityUserUID) {
+		this.entityUserUID = entityUserUID;
 	}
 
 	@JsonProperty("host")
@@ -131,7 +131,7 @@ public class ActivityAlert implements Serializable{
 	}
 
 	public String toString(){
-		String str = "type "+ type +"\t"+ "activity  " + activity +"\t" + "metric  " + metric +"\t" + "value  " + value +"\t"+ "providerUID  " + providerUID +"\t" +"host  " + host +"\t" +"timestamp " + timestamp; 
+		String str = "type "+ type +"\t"+ "activity  " + activity +"\t" + "metric  " + metric +"\t" + "value  " + value +"\t"+ "entityUserUID  " + entityUserUID +"\t" +"host  " + host +"\t" +"timestamp " + timestamp; 
 		return str;
 	}
 

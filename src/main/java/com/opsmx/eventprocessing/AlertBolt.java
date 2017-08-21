@@ -52,7 +52,7 @@ public class AlertBolt extends BaseRichBolt{
 			+" : "+tuple.getStringByField("host")+" : "+tuple.getLongByField("timestamp"));
 		
 		alert.setActivity(activity);
-		alert.setProviderUID(entityUserUID);
+		alert.setEntityUserUID(entityUserUID);
 		alert.setHost(host);
 		alert.setMetric(metric);
 		alert.setTimestamp(timestamp);
