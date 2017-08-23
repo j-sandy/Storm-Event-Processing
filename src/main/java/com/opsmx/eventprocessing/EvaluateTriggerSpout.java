@@ -52,7 +52,7 @@ public class EvaluateTriggerSpout extends BaseRichSpout implements IRichSpout {
 //		int slaId = 2;
 //		SLA sla = SLAData.getSLA(slaId);
 //		collector.emit("EvaluateTriggerStream", new Values(sla.getMetricName(), slaId));
-		
+		SLAData.updateSLAs();
 		long timetosleep=Long.MAX_VALUE;
 		//System.out.print(i);
 		for(Map.Entry<Integer,SLA> slalist : SLAData.getIdVsSLAsMap().entrySet()){
