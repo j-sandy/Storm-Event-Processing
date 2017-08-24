@@ -202,7 +202,7 @@ public class SlaBolt extends BaseRichBolt {
 				String entityUserUID=metric.getTags().get("providerUID")==null ? "" : metric.getTags().get("providerUID");
 				String host=metric.getTags().get("host")==null ? "" : metric.getTags().get("host");
 				System.out.println("Inside evaluateSLACondition(): SLA Violated : "+sla.getMetricName()+" : "+evaluatedValue+" : "+entityUserUID+" : "+host+" : "+new Date().getTime());
-				collector.emit("ActivityAlert", new Values("alert","GOOGLE_GLASS",sla.getMetricName(),evaluatedValue,entityUserUID,host,new Date().getTime()));
+				collector.emit("ActivityAlert", new Values("alert","GOOGLE_GLASS",sla.getMetricName(),evaluatedValue,entityUserUID,host,new Date().getTime(),sla.getId()));
 			}
 			//collector.emit("ActivityAlert", new Values("alert","signalLoss","device.rssi",85.0,"1124-1004","0WP1A1AA15250058",1501509541198L));
 			//try{
@@ -218,6 +218,6 @@ public class SlaBolt extends BaseRichBolt {
 
 	@Override
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		declarer.declareStream("ActivityAlert", new Fields("type","activity","metric","value","entityUserUID","host","timestamp"));
+		declarer.declareStream("ActivityAlert", new Fields("type","activity","metric","value","entityUserUID","host","timestamp","slaId"));
 	}
 }

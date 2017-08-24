@@ -36,6 +36,8 @@ public class ActivityAlert implements Serializable{
 	private String host;
 	@JsonProperty("timestamp")
 	private long timestamp;
+	@JsonProperty("timestamp")
+	private int slaId;
 
 	public ActivityAlert() {
 
@@ -48,7 +50,8 @@ public class ActivityAlert implements Serializable{
 			double value,
 			String entityUserUID, 
 			String host,
-			long timestamp
+			long timestamp,
+			int slaId
 			)
 	{
 		this.type = type;
@@ -58,6 +61,7 @@ public class ActivityAlert implements Serializable{
 		this.entityUserUID = entityUserUID;
 		this.host = host;
 		this.timestamp = timestamp;
+		this.slaId = slaId;
 	}
 
 	@JsonProperty("type")
@@ -129,9 +133,20 @@ public class ActivityAlert implements Serializable{
 	public long getTimestamp(){
 		return timestamp;
 	}
+	
+	@JsonProperty("slaId")
+	public int getSlaId() {
+		return slaId;
+	}
+
+	@JsonProperty("slaId")
+	public void setSlaId(int slaId) {
+		this.slaId = slaId;
+	}
+
 
 	public String toString(){
-		String str = "type "+ type +"\t"+ "activity  " + activity +"\t" + "metric  " + metric +"\t" + "value  " + value +"\t"+ "entityUserUID  " + entityUserUID +"\t" +"host  " + host +"\t" +"timestamp " + timestamp; 
+		String str = "type "+ type +"\t"+ "activity  " + activity +"\t" + "metric  " + metric +"\t" + "value  " + value +"\t"+ "entityUserUID  " + entityUserUID +"\t" +"host  " + host +"\t" +"timestamp " + timestamp + "slaId : " + slaId; 
 		return str;
 	}
 

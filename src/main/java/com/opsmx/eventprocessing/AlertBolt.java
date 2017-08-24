@@ -46,10 +46,11 @@ public class AlertBolt extends BaseRichBolt{
 		String entityUserUID = tuple.getStringByField("entityUserUID");
 		String host = tuple.getStringByField("host");
 		long timestamp = tuple.getLongByField("timestamp");
+		int slaId = tuple.getIntegerByField("slaId");
 		
 		System.out.println("Inside Alert Bolt :"+ tuple.getStringByField("type")+" : "+tuple.getStringByField("activity")
 			+" : "+tuple.getStringByField("metric")+" : "+tuple.getDoubleByField("value")+" : "+tuple.getStringByField("entityUserUID")
-			+" : "+tuple.getStringByField("host")+" : "+tuple.getLongByField("timestamp"));
+			+" : "+tuple.getStringByField("host")+" : "+tuple.getLongByField("timestamp")+" : "+tuple.getIntegerByField("slaId"));
 		
 		alert.setActivity(activity);
 		alert.setEntityUserUID(entityUserUID);
@@ -58,6 +59,7 @@ public class AlertBolt extends BaseRichBolt{
 		alert.setTimestamp(timestamp);
 		alert.setType(type);
 		alert.setValue(value);
+		alert.setSlaId(slaId);
 		
 		try {
 			alert.addObjectToList();
