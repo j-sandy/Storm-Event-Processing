@@ -117,19 +117,19 @@ public class SLAData {
 		 	 			agg1 = Aggregator.MIN;
 		 	 		}
 		 	 		
-		 	 		if (sladesc[n].toLowerCase().contains("greater than"))
+		 	 		if (sladesc[n].toLowerCase().trim().contains("greater than") || sladesc[n].toLowerCase().trim().contains(">"))
 		 	 		{
 		 	 			com1 = ComparisonOperator.GT;
 		 	 		}
-		 	 		if (sladesc[n].toLowerCase().contains("equal to"))
+		 	 		if (sladesc[n].toLowerCase().trim().contains("equal to") || sladesc[n].toLowerCase().trim().contains("="))
 		 	 		{
 		 	 			com1 = ComparisonOperator.EQ;
-		 	 		}if (sladesc[n].toLowerCase().contains("less than"))
+		 	 		}if (sladesc[n].toLowerCase().trim().contains("less than") || sladesc[n].toLowerCase().trim().contains("<"))
 		 	 		{
 		 	 			com1 = ComparisonOperator.LT;
 		 	 		}
 		 	 		
-		 	 		if(sladesc[n].toLowerCase().contains("sec"))
+		 	 		if(sladesc[n].toLowerCase().trim().contains("sec"))
 		 	 		{
 		 	 			aggtime1 = Integer.parseInt(sladesc[n].toLowerCase().substring(0, sladesc[n].toLowerCase().indexOf("sec")));
 		 	 			aggtime2 = Integer.parseInt(sladesc[n].toLowerCase().substring(0, sladesc[n].toLowerCase().indexOf("sec")));
