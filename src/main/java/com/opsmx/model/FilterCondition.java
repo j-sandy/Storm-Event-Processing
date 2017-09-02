@@ -31,5 +31,13 @@ public class FilterCondition {
 	public void setValue(String value) {
 		this.value = value;
 	}
-
+	public FilterCondition(String field,ComparisonOperator operator, String value ){
+		this.field = field;
+		this.comparisonOperator = operator;
+		this.value = value;
+	}
+	public FilterCondition(){
+		
+	}
+	
 }

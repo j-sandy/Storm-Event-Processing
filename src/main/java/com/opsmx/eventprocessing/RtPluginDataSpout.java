@@ -84,7 +84,8 @@ public class RtPluginDataSpout extends BaseRichSpout implements IRichSpout {
 			datagramSocket.receive(packet);
 			//Value v=msgpack.read(buffer);			
 			metric = msgpack.read(buffer, Metric.class);
-			System.out.println("buffer= "+new String(buffer)+"--: "+metric);
+			//System.out.println("buffer= "+new String(buffer)+"--: "+metric);
+			System.out.println("buffer= --: "+metric);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

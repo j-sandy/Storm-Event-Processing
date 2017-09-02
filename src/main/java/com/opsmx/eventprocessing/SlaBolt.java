@@ -167,6 +167,24 @@ public class SlaBolt extends BaseRichBolt {
 				}
 				evaluateSLACondition(sla, maxValue==Double.MIN_VALUE ? Double.NaN : maxValue, groupByValue,metric==null ? null :metric);
 				break;
+			case COUNT:
+				double countValue = 0;
+				int count1 = 0;
+				metric=null;
+				while (groupMetricsIterator.hasNext()) {
+					metric = groupMetricsIterator.next();
+					//For converting timestamp without microsec (10 digit) to with microsec (13 digit) by multiplying 1000 ms, but loosing precision for microsec.
+					metrictimestamp = Long.toString(metric.getTimestamp()).trim().length()== 10 ? metric.getTimestamp()*1000 : metric.getTimestamp() ;        
+					if (metrictimestamp < startTimeToEvaluate) {
+						System.out.println("inside evaluateSLAAndCleanUp(): AVG: cleanup "+metrictimestamp);
+						groupMetricsIterator.remove();
+						continue;
+					}
+					count1++;
+				}
+				countValue = count1;
+				evaluateSLACondition(sla, countValue, groupByValue,metric==null ? null :metric);
+				break;
 			case SUM:
 				double sumValue = 0;
 				metric = null;
@@ -200,19 +218,12 @@ public class SlaBolt extends BaseRichBolt {
 			// TODO generate alert with sla.groupByName and groupByValue
 			if (metric.getTags().get(sla.getGroupBy()).equalsIgnoreCase(groupByValue)){
 				String entityUserUID=metric.getTags().get("providerUID")==null ? "" : metric.getTags().get("providerUID");
-				String host=metric.getTags().get("host")==null ? "" : metric.getTags().get("host");
+				String host=metric.getTags().get(groupByValue)==null ? "" : metric.getTags().get(groupByValue);
 				System.out.println("Inside evaluateSLACondition(): SLA Violated : "+sla.getMetricName()+" : "+evaluatedValue+" : "+entityUserUID+" : "+host+" : "+new Date().getTime());
 				collector.emit("ActivityAlert", new Values("alert","GOOGLE_GLASS",sla.getMetricName(),evaluatedValue,entityUserUID,host,new Date().getTime(),sla.getId()));
 			}
 			//collector.emit("ActivityAlert", new Values("alert","signalLoss","device.rssi",85.0,"1124-1004","0WP1A1AA15250058",1501509541198L));
-			//try{
-				/*Alert testalert = new Alert(sla.getMetricName(),"Alert","Normal","Output",1,"host1",true,"testalert","sensorMetric","vendor","connectivitytype","location");
-				testalert.addObjectToList();*/
-			/*	ActivityAlert actalert = new ActivityAlert("alert","signalLoss","device.rssi",85.0,"1124-1004","0WP1A1AA15250058",1501509541198L);
-				actalert.addObjectToList();
-			} catch (IOException ioe){
-				ioe.printStackTrace();
-			}*/
+
 		}
 	}
 

@@ -36,7 +36,7 @@ public class ActivityAlert implements Serializable{
 	private String host;
 	@JsonProperty("timestamp")
 	private long timestamp;
-	@JsonProperty("timestamp")
+	@JsonProperty("slaId")
 	private int slaId;
 
 	public ActivityAlert() {
