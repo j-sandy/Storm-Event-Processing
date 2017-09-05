@@ -99,6 +99,7 @@ public class SlaBolt extends BaseRichBolt {
 
 	private void evaluateSLAAndCleanUp(int slaId) {
 		//System.out.println("inside evaluateSLAAndCleanUp(): "+Integer.toString(slaId));
+		try{
 		SLA sla = SLAData.getSLA(slaId);
 		int aggregateDurationSecs = sla.getAggregateDurationSeconds();
 		long currentTime = new Date().getTime();
@@ -206,6 +207,9 @@ public class SlaBolt extends BaseRichBolt {
 				break;
 			}
 		}
+		}catch(NullPointerException npe){
+			npe.printStackTrace();
+		}
 	}
 
 	private void evaluateSLACondition(SLA sla, double evaluatedValue, String groupByValue, Metric metric) {
@@ -232,3 +236,4 @@ public class SlaBolt extends BaseRichBolt {
 		declarer.declareStream("ActivityAlert", new Fields("type","activity","metric","value","entityUserUID","host","timestamp","slaId"));
 	}
 }
+
