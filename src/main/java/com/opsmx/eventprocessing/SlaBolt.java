@@ -133,7 +133,7 @@ public class SlaBolt extends BaseRichBolt {
 					count++;
 				}
 				overallValue /= count;
-				evaluateSLACondition(sla, overallValue, groupByValue,metric==null ? null :metric);
+				evaluateSLACondition(sla, overallValue, groupByValue,metric);
 				break;
 			case MIN:
 				double minValue = Double.MAX_VALUE;
@@ -150,7 +150,7 @@ public class SlaBolt extends BaseRichBolt {
 					//count++;
 				}
 				//overallValue /= count;
-				evaluateSLACondition(sla, minValue==Double.MAX_VALUE ? Double.NaN : minValue, groupByValue,metric==null ? null :metric);
+				evaluateSLACondition(sla, minValue==Double.MAX_VALUE ? Double.NaN : minValue, groupByValue,metric);
 				break;
 			case MAX:
 				double maxValue = Double.MIN_VALUE;
@@ -166,7 +166,7 @@ public class SlaBolt extends BaseRichBolt {
 					maxValue= Math.max(maxValue, metric.getValue());
 					//count++;
 				}
-				evaluateSLACondition(sla, maxValue==Double.MIN_VALUE ? Double.NaN : maxValue, groupByValue,metric==null ? null :metric);
+				evaluateSLACondition(sla, maxValue==Double.MIN_VALUE ? Double.NaN : maxValue, groupByValue,metric);
 				break;
 			case COUNT:
 				double countValue = 0;
@@ -184,7 +184,7 @@ public class SlaBolt extends BaseRichBolt {
 					count1++;
 				}
 				countValue = count1;
-				evaluateSLACondition(sla, countValue, groupByValue,metric==null ? null :metric);
+				evaluateSLACondition(sla, countValue, groupByValue,metric);
 				break;
 			case SUM:
 				double sumValue = 0;
@@ -200,7 +200,7 @@ public class SlaBolt extends BaseRichBolt {
 					sumValue+= metric.getValue() ;
 					//count++;
 				}
-				evaluateSLACondition(sla, sumValue, groupByValue,metric==null ? null :metric);
+				evaluateSLACondition(sla, sumValue, groupByValue,metric);
 				break;
 			default:
 				System.out.println("SLA Aggregator not handled:" + sla.getAggregator());
@@ -213,7 +213,12 @@ public class SlaBolt extends BaseRichBolt {
 	}
 
 	private void evaluateSLACondition(SLA sla, double evaluatedValue, String groupByValue, Metric metric) {
-		System.out.println("inside evaluateSLACondition(): "+evaluatedValue+" : "+groupByValue+ " Metric : "+metric==null?"NULL":"Available");
+		System.out.println("inside evaluateSLACondition(): "+evaluatedValue+" : "+groupByValue);
+		try{
+			System.out.println("inside evaluateSLACondition(): "+metric.getTags());
+			}catch(NullPointerException npe){
+				System.out.println("inside evaluateSLACondition(): metric is null");
+		}
 		boolean slaEvaluationResult = OpsmxUtils.evaluateCondition(evaluatedValue, sla.getComparisonOperator(),
 				sla.getValue());
 		if (slaEvaluationResult) {
@@ -222,7 +227,8 @@ public class SlaBolt extends BaseRichBolt {
 			// TODO generate alert with sla.groupByName and groupByValue
 			if (metric.getTags().get(sla.getGroupBy()).equalsIgnoreCase(groupByValue)){
 				String entityUserUID=metric.getTags().get("providerUID")==null ? "" : metric.getTags().get("providerUID");
-				String host=metric.getTags().get(groupByValue)==null ? "" : metric.getTags().get(groupByValue);
+				String host=groupByValue; 
+						//metric.getTags().get(groupByValue)==null ? "" : metric.getTags().get(groupByValue);
 				System.out.println("Inside evaluateSLACondition(): SLA Violated : "+sla.getMetricName()+" : "+evaluatedValue+" : "+entityUserUID+" : "+host+" : "+new Date().getTime());
 				collector.emit("ActivityAlert", new Values("alert","GOOGLE_GLASS",sla.getMetricName(),evaluatedValue,entityUserUID,host,new Date().getTime(),sla.getId()));
 			}
