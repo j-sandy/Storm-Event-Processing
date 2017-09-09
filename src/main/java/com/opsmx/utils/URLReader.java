@@ -10,14 +10,26 @@ public class URLReader {
 	private static Properties prop = null;
 	private static InputStream  input  = null;
 	
-	public static String getUrlFromConfigFile(String property){
+	static {
+		System.out.println("Inside URLReader.Static block");
 		prop = new Properties();
+		input  = URLReader.class.getResourceAsStream("/UrlConfig.properties");
+		try {
+			prop.load(input);
+			System.out.println("Read props : "+prop.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static String getUrlFromConfigFile(String property){
+		/*prop = new Properties();
 			input  = URLReader.class.getResourceAsStream("/UrlConfig.properties");
 			try {
 				prop.load(input);
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
+			}*/
 		url = prop.getProperty(property);
 		System.out.println("!!!!!!!!!!Config File URL = " + url);
 		return url;
