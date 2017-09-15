@@ -18,8 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SLAData {
-	private static ConcurrentHashMap<Integer, SLA> idVsSLAs;
-	private static ConcurrentHashMap<String, ArrayList<SLA>> metricNameVsSLAs;
+	private static ConcurrentHashMap<Integer, SLA> idVsSLAs = null;
+	private static ConcurrentHashMap<String, ArrayList<SLA>> metricNameVsSLAs = null;
 
 	public static ConcurrentHashMap<Integer, SLA> getIdVsSLAsMap() {
 		return idVsSLAs;
@@ -55,8 +55,10 @@ public class SLAData {
 	}*/
 	
 	public static void updateSLAs() {
-		idVsSLAs = new ConcurrentHashMap<>();
-		metricNameVsSLAs = new ConcurrentHashMap<>();
+		//if(idVsSLAs==null)
+		//idVsSLAs = new ConcurrentHashMap<>();
+		//if(metricNameVsSLAs==null)
+		//metricNameVsSLAs = new ConcurrentHashMap<>();
 		/************Code starts*********************/
 		try{
 			String jsonitter;
@@ -68,6 +70,17 @@ public class SLAData {
 	        BufferedReader ne = new BufferedReader(new InputStreamReader(hj.getInputStream()));
 	        while ((jsonitter = ne.readLine()) != null) 
 	        	app.append(jsonitter); 
+	        
+	        /**Added condition to handle following conditions:
+	        1. if RESTAPI server is down then exception is generated and being handled by catch from line 70 (buffered reader).
+	        It will let the pre-existing SLAs continue.
+	        2. if no SLA is defined in system, then pre-existing SLAs continue. (removing this for now)
+	        **/
+	        //if(app.length()>0)
+	        //{
+	        	idVsSLAs = new ConcurrentHashMap<>();
+	        	metricNameVsSLAs = new ConcurrentHashMap<>();	        	
+	        //}
 	        	
 	     	JSONObject jsonrules = new JSONObject(app.toString());
 	     	JSONArray stagesjson = jsonrules.getJSONArray("slaRules");
@@ -175,20 +188,21 @@ public class SLAData {
 	 		
 	
 		 		System.out.println(er1);
-		 		idVsSLAs.put(er1.getId(), er1);
-
-		 		try{
-		 			if (metricNameVsSLAs.containsKey(er1.getMetricName())){
-		 				metricNameVsSLAs.get(er1.getMetricName()).add(er1);
-		 			}else {
-						ArrayList<SLA> slas = new ArrayList<>();
-						slas.add(er1);
-						metricNameVsSLAs.put(er1.getMetricName(), slas);
-					}		 					
-		 		}catch(NullPointerException npe){
-		 			npe.printStackTrace();
+		 		if(idVsSLAs!=null && metricNameVsSLAs!=null){
+			 		idVsSLAs.put(er1.getId(), er1);
+	
+			 		try{
+			 			if (metricNameVsSLAs.containsKey(er1.getMetricName())){
+			 				metricNameVsSLAs.get(er1.getMetricName()).add(er1);
+			 			}else {
+							ArrayList<SLA> slas = new ArrayList<>();
+							slas.add(er1);
+							metricNameVsSLAs.put(er1.getMetricName(), slas);
+						}		 					
+			 		}catch(NullPointerException npe){
+			 			npe.printStackTrace();
+			 		}
 		 		}
-		 		
 	    	}
 	    	/*
 	    	//Hardcoding SLA for testing login and logout event, at BPO and Hospital for doctor
